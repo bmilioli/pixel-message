@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "wpp_conections",
+  "info": {
+    "singularName": "wpp-conection",
+    "pluralName": "wpp-conections",
+    "displayName": "Wpp Conection"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "number": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    }
+  }
+}
