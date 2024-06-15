@@ -1,9 +1,9 @@
 import express from 'express';
+import * as whatsappController from '../controllers/whatsapp.controller';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send('Hello, world!');
-});
+router.get('/startConnection', whatsappController.startConnection);
 
+router.post('/sendMessageTyping', whatsappController.sendMessageTyping);
 export default router;
