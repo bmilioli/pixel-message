@@ -8,7 +8,7 @@ lerna-debug.log*
 .pnpm-debug.log*
 
 # baileys auth info
-./baileys_auth_info.json
+baileys_auth_info/
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
