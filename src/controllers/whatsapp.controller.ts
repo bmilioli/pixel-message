@@ -34,8 +34,9 @@ export const startConnection = async (req: Request, res: Response) => {
 
 export const sendMessageTyping = async (req: Request, res: Response) => {
   try {
-    console.log('req', req);
-    const { number, message } = req.body;
+    console.log('req', req.body);
+    const message = await req.body.message;
+    const number = req.body.number;
     const treatedNumber = `${number}@s.whatsapp.net`;
     await whatsappService.sendMessageTyping(message, treatedNumber);
 

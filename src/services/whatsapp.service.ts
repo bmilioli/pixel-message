@@ -22,7 +22,7 @@ import open from 'open';
 import fs from 'fs';
 
 // start a connection
-var sock: ReturnType<typeof makeWASocket> | undefined;
+let socket: ReturnType<typeof makeWASocket> | undefined;
 
 export const startSock2 = async () => {
   const logger = MAIN_LOGGER.child({});
@@ -58,7 +58,7 @@ export const startSock2 = async () => {
   const { version, isLatest } = await fetchLatestBaileysVersion();
   console.log(`using WA v${version.join('.')}, isLatest: ${isLatest}`);
 
-  sock = makeWASocket({
+  socket = makeWASocket({
     version,
     logger,
     printQRInTerminal: true,
@@ -89,30 +89,30 @@ export const startSock2 = async () => {
     return proto.Message.fromObject({});
   }
 
-  sock.ev.on('messages.upsert', ({ messages }) => {
+  socket.ev.on('messages.upsert', ({ messages }) => {
     console.log('got messages', messages);
   });
 
-  return sock;
+  return socket;
 };
 
 export const sendMessageTyping = async (
   msg: AnyMessageContent,
   jid: string
 ) => {
-  if (!sock) {
+  if (!socket) {
     throw new Error('WhatsApp not initialized');
   }
 
-  await sock.presenceSubscribe(jid);
+  await socket.presenceSubscribe(jid);
   await delay(500);
 
-  await sock.sendPresenceUpdate('composing', jid);
+  await socket.sendPresenceUpdate('composing', jid);
   await delay(2000);
 
-  await sock.sendPresenceUpdate('paused', jid);
+  await socket.sendPresenceUpdate('paused', jid);
 
-  await sock.sendMessage(jid, msg);
+  await socket.sendMessage(jid, msg);
 };
 
 export const startSock = async () => {
