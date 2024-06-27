@@ -56,13 +56,60 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
 // Listen for any kind of message. There are different kinds of
 // messages.
 bot.on('message', (msg) => {
-  console.log('msg', msg);
+  console.log('msg', msg.text);
   const chatId = msg.chat.id;
 
+  //Botão de opções no teclado
+  const options = {
+    reply_markup: {
+      keyboard: [
+        [{ text: 'Option 1' }, { text: 'Option 2' }],
+        [{ text: 'Option 3' }, { text: 'Option 4' }],
+      ],
+      resize_keyboard: true,
+      one_time_keyboard: true,
+    },
+  };
+
+  // const options = {
+  //   reply_markup: {
+  //     inline_keyboard: [
+  //       [
+  //         { text: 'Option 1', callback_data: 'option1' },
+  //         { text: 'Option 2', callback_data: 'option2' },
+  //       ],
+  //     ],
+  //     one_time_keyboard: true,
+  //   },
+  // };
+
   // send a message to the chat acknowledging receipt of their message
-  bot.sendMessage(chatId, 'Bem vindo ao Artistic Trivia Bot!');
+  bot.sendMessage(chatId, 'Bem vindo ao Artistic Trivia Bot!', options);
+});
+
+bot.on('callback_query', (callbackQuery) => {
+  const msg = callbackQuery.message;
+  const data = callbackQuery.data;
+  console.log('callbackQuery', callbackQuery);
+  if (!msg) return console.log('No message');
+
+  if (data === 'option1') {
+    bot.sendMessage(msg.chat.id, 'You selected Option 1');
+  } else if (data === 'option2') {
+    bot.sendMessage(msg.chat.id, 'You selected Option 2');
+  }
+
+  bot.editMessageReplyMarkup(
+    { inline_keyboard: [] },
+    { chat_id: msg.chat.id, message_id: msg.message_id }
+  );
+
+  // Important: Acknowledge the callback to avoid repeat messages
+  bot.answerCallbackQuery(callbackQuery.id);
 });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+export { bot };

@@ -5,5 +5,7 @@ const router = express.Router();
 
 //router.get('/startConnection', whatsappController.startConnection);
 
-router.post('/sendMessageTyping', telegramController.sendMessageTyping);
+router.post('/sendMessage', telegramController.sendMessage);
+router.post('/sendPoll', telegramController.sendPoll);
+
 export default router;

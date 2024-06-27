@@ -1,0 +1,22 @@
+meta {
+  name: Send Poll
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/telegram/sendPoll
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "chatId": "6745923107",
+    "question": "Escolha uma opção",
+    "options": [
+      { "text": "resp 1", "voter_count": 0 },
+      { "text": "resp 2", "voter_count": 0 }
+    ]
+  }
+}

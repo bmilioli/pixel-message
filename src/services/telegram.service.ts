@@ -1,15 +1,23 @@
 import TelegramBot from 'node-telegram-bot-api';
 import config from '../../config/config';
+import { bot } from '../app';
 
-export const sendMessageTyping = async (req: any, res: any) => {
+export const sendMessage = async (chatId: any, message: any) => {
   try {
-    const { chatId } = req.body;
-    const token = config.telegramToken;
-    const bot = new TelegramBot(token, { polling: true });
-
-    bot.sendChatAction(chatId, 'typing');
-    res.status(200).json({ status: 'success', message: 'Typing message sent' });
+    const messageSent = await bot.sendMessage(chatId, message);
+    return messageSent;
   } catch (error) {
-    res.status(500).json({ status: 'error', message: error });
+    return error;
+  }
+};
+
+export const sendPoll = async (chatId: any, question: any, options: any) => {
+  try {
+    const poll = await bot.sendPoll(chatId, question, options);
+    console.log('poll', poll);
+    return poll;
+  } catch (error) {
+    console.log('error', error);
+    return error;
   }
 };
