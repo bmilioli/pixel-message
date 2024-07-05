@@ -1,16 +1,24 @@
 import express, { NextFunction, Request, Response } from 'express';
-import config from '../config/config';
 import bodyParser from 'body-parser';
 import TelegramBot from 'node-telegram-bot-api';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 //import cors from 'cors';
-
 import telegramRouter from './routes/telegram.route';
 
+import * as messageService from './services/message.service';
+
+dotenv.config();
 const app = express();
-const port = config.port;
+
+const port = process.env.PORT || 3000;
+const mongoUri = process.env.MONGO_URI || '';
+const token = process.env.TELEGRAM_TOKEN || '';
+
+mongoose.connect(mongoUri, {});
 
 app.get('/', (req: any, res: Response) => {
-  res.send('Hello, world!');
+  res.send('Working!');
 });
 
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -28,16 +36,10 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 app.use('/telegram', telegramRouter);
 
-const token = config.telegramToken;
-
 const bot = new TelegramBot(token, { polling: true });
 
 // Matches "/echo [whatever]"
 bot.onText(/\/echo (.+)/, (msg, match) => {
-  // 'msg' is the received Message from Telegram
-  // 'match' is the result of executing the regexp above on the text content
-  // of the message
-
   console.log('match', match);
   console.log('msg', msg);
   const chatId = msg.chat.id;
@@ -56,35 +58,7 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
 // Listen for any kind of message. There are different kinds of
 // messages.
 bot.on('message', (msg) => {
-  console.log('msg', msg.text);
-  const chatId = msg.chat.id;
-
-  //Botão de opções no teclado
-  const options = {
-    reply_markup: {
-      keyboard: [
-        [{ text: 'Option 1' }, { text: 'Option 2' }],
-        [{ text: 'Option 3' }, { text: 'Option 4' }],
-      ],
-      resize_keyboard: true,
-      one_time_keyboard: true,
-    },
-  };
-
-  // const options = {
-  //   reply_markup: {
-  //     inline_keyboard: [
-  //       [
-  //         { text: 'Option 1', callback_data: 'option1' },
-  //         { text: 'Option 2', callback_data: 'option2' },
-  //       ],
-  //     ],
-  //     one_time_keyboard: true,
-  //   },
-  // };
-
-  // send a message to the chat acknowledging receipt of their message
-  bot.sendMessage(chatId, 'Bem vindo ao Artistic Trivia Bot!', options);
+  messageService.messageRecived(msg);
 });
 
 bot.on('callback_query', (callbackQuery) => {

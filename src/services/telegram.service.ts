@@ -1,10 +1,10 @@
 import TelegramBot from 'node-telegram-bot-api';
-import config from '../../config/config';
+
 import { bot } from '../app';
 
-export const sendMessage = async (chatId: any, message: any) => {
+export const sendMessage = async (chatId: any, message: any, options?: any) => {
   try {
-    const messageSent = await bot.sendMessage(chatId, message);
+    const messageSent = await bot.sendMessage(chatId, message, options);
     return messageSent;
   } catch (error) {
     return error;
