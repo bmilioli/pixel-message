@@ -1,6 +1,8 @@
 import { bot } from '../app';
 import * as telegramService from './telegram.service';
+import * as gameService from './game.service';
 import * as userRepo from '../repositories/user.repo';
+import * as questionRepo from '../repositories/question.repo';
 import { IUser } from '../models/user.model';
 
 export const messageRecived = async (msg: any) => {
@@ -31,7 +33,12 @@ export const messageRecived = async (msg: any) => {
       'Bem vindo ao Artistic Trivia Bot!',
       options
     );
-  } else {
+  } else if (!user.activeInteraction) {
+    if (message === 'Jogar Trivia') {
+      const game = await gameService.startGame(user);
+    } else {
+      const game = await gameService.startGame(user);
+    }
   }
 };
 
