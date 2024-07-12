@@ -12,3 +12,15 @@ export const create = async (user: any) => {
 export const getOneByChatId = async (chatId: number) => {
   return await User.findOne({ chatId });
 };
+
+export const update = async (user: any) => {
+  return await User.updateOne({ _id: user._id }, user);
+};
+
+export const getOneById = async (id: string) => {
+  return await User.findOne({ _id: id });
+};
+
+export const cancelGame = async (user: any) => {
+  return await User.updateOne({ _id: user._id }, { activeGame: null });
+};
